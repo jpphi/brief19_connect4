@@ -28,13 +28,14 @@ class Console(EntSort):
             try:
                 cp= int(cp)
                 if cp in colonne_disponible:
-                    return cp
+                    break
                 else:
                     print(f"la colonne {cp} n'est pas disponible! Colonne disponible: {colonne_disponible}!")
 
             except :
                 print(f"{cp} doit être un entier inclu dans {colonne_disponible}!")
-                   
+
+        return cp          
 
     
     def sortie(self,message):
@@ -55,7 +56,7 @@ class py_game(EntSort):
         size = self.image.get_size ()
         self.screen = pygame.display.set_mode(size)
         self.screen.blit (self.image, (0,0))
-        #pygame.display.flip ()
+        pygame.display.flip ()
 
         self.pionjaune = pygame.image.load("./pygame/PionJaune.png")
         self.pionrouge = pygame.image.load("./pygame/PionRouge.png")
@@ -102,7 +103,7 @@ class py_game(EntSort):
                     #print('i,j',i,j)
                     self.screen.blit(self.pionrouge,(16+97*j,16+97*i)) #### ATTENTION AVEC TAILLE MATRICE VOIR SI GRILLE POSSIBLE
                     pygame.display.flip()
-                if matrice[i,j]== 2:
+                if matrice[i,j]== -1:
                     #print('i,j',i,j)
                     self.screen.blit(self.pionjaune,(16+97*j,16+97*i))
                     pygame.display.flip()

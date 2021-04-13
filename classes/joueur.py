@@ -2,7 +2,7 @@ import abc
 from abc import ABC, abstractmethod
 
 class Joueur(ABC):
-    _couleur_dispo=[1,2]
+    _couleur_dispo=[-1,1]
 
     @abstractmethod
     def nom(self):
@@ -19,7 +19,7 @@ class Joueur(ABC):
     
     
 class Humain(Joueur):
-    __couleur= -1
+    __couleur= 0
     __nom= "Humain"
     __recompense= 0
     

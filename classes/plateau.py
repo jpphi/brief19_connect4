@@ -72,32 +72,78 @@ class Plateau:
         recompense= 0
         fin_de_jeu= 0
         
+        # On place le jeton
         col= col- 1 # On joue à partir de la colonne 1 qui correspond à la colonne 0 du __board
         colonne= self.__board[:,col].reshape(self.__board.shape[0]) # on récupère la colonne 'col' de la matrice board
-        a= np.where(colonne== 0)
-        lig= a[0].max()
-        self.__board[lig,col]= couleur
+        a= np.where(colonne== 0) # Liste des élément à 0
+        lig= a[0].max() # On prend l'élément le plus profond
+        self.__board[lig,col]= couleur # On place le jeton au dessus de la pile à la 1ère case "vide"
         
-        # FAIRE UNE METHODE DE CLASSE VICTOIRE
-        
-        colonne = self.__board[lig:lig+self.__A_LA_SUITE,col]
-        if len(colonne) >= self.__A_LA_SUITE:
-            gagne= self.__verif_colonne(colonne, fenetre)
-            if gagne:
-                recompense= 1
-                fin_de_jeu= 1
-            #print(f"gagne: {gagne} colonne: {colonne} fenetre: {fenetre} fin_de_jeu:{fin_de_jeu}")
+        # On vérifie la colonne
+        gagne= self.__verif_colonne(lig, col, fenetre)
+        if gagne== False: # Pas de gagnant sur la colonne, on vérifie la ligne
+            gagne= self.__verif_ligne(lig, col, fenetre)
+            if gagne== False: # Pas de gagnant sur la ligne, on teste les diagonales
+                gagne= self.__verif_diag(lig, col, fenetre)
+
+        if gagne:
+            recompense= 1
+            fin_de_jeu= 1
 
         
         return self.__board, fin_de_jeu, recompense
     
-    @classmethod
-    def __verif_colonne(cls, colonne, fenetre):
-        print(f"colonne: {colonne}\nfenetre: {fenetre}")
-        print(f"type colonne: {type(colonne)}\ntype fenetre: {type(fenetre)}")
-        if np.all([colonne, fenetre]): return True
+    def __verif_colonne(self, lig, col, fenetre):
+        # On extrait la colonne
+        lig2= lig+self.__A_LA_SUITE
+        if lig2 > self.__board.shape[0]: lig2= self.__board.shape[0]
+        colonne = self.__board[lig:lig2,col]
+        if len(colonne) >= self.__A_LA_SUITE: # On ne teste la colonne que si elle comporte au moins "__A_LA_SUITE" éléments
+            #print(f"colonne: {colonne}\nfenetre: {fenetre}")
+            return (colonne== fenetre).all()
         return False
-        
+
+    def __verif_ligne(self, lig, col, fenetre):
+        # On extrait la colonne
+        c1= col - self.__A_LA_SUITE + 1
+        if c1 < 0: c1= 0
+        c2= col + self.__A_LA_SUITE
+        if c2> self.__board.shape[1]: c2= self.__board.shape[1]
+        #####print(mat[l,c1:c2])
+
+        #lig2= lig+self.__A_LA_SUITE
+        #if lig2 > self.__board.shape[0]: lig2= self.__board.shape[0]
+        colonne = self.__board[lig,c1:c2]
+        conv= np.convolve(colonne, fenetre)
+        # print(f"Conv: {conv}")
+        if self.__A_LA_SUITE in conv:
+            return True
+        return False
+
+    def __verif_diag(self,lig, col, fenetre):
+        pad_board= np.pad(self.__board, (self.__A_LA_SUITE - 1, self.__A_LA_SUITE - 1),constant_values= (0, 0))
+
+        # lig et col dans le nouveau référentiel de pad board sont décalé de "A_LA_SUITE"
+        board_augmente= pad_board[lig : lig + 2 * self.__A_LA_SUITE - 1, col : col + 2 * self.__A_LA_SUITE - 1]
+        diag1= np.diag(board_augmente)
+
+        conv= np.convolve(diag1, fenetre)
+        # print(f"Conv: {conv}")
+        if self.__A_LA_SUITE in conv:
+            return True
+
+        board_augmente= board_augmente.T[::-1] # On récupère la diagonale opposée
+        diag2= np.diag(board_augmente)
+        conv= np.convolve(diag2, fenetre)
+        print(f"diag1: {diag1}\ndiag2: {diag2}")
+        print(f"Conv: {conv}")
+        if self.__A_LA_SUITE in conv:
+            return True
+
+        return False
+
+
+
     def init_board(self):
         self.__board[:,:]= 0
         return self.__board
