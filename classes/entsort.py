@@ -2,6 +2,7 @@ import abc
 from abc import ABC, abstractmethod
 import pygame
 
+
 class EntSort(ABC):
     __TYPE_ENTSORT= 0
     
