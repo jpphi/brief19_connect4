@@ -28,7 +28,7 @@ class Plateau:
     
     
     def __init__(self, largeur= __LARGEUR, hauteur= __HAUTEUR, a_la_suite= __A_LA_SUITE ):
-        print(largeur, hauteur, a_la_suite)
+        #print(largeur, hauteur, a_la_suite)
         if largeur < Plateau.__MINIMUM_LARGEUR or hauteur < Plateau.__MINIMUM_HAUTEUR or a_la_suite < 3 or \
             a_la_suite >  min(largeur, hauteur):
             msg= f"La dimension minimum de la matrice doit être de {Plateau.__MINIMUM_LARGEUR} x {Plateau.__MINIMUM_HAUTEUR}.\n"+\
@@ -106,14 +106,11 @@ class Plateau:
     def __verif_ligne(self, lig, col, fenetre):
         # On extrait la colonne
         c1= col - self.__A_LA_SUITE + 1
-        if c1 < 0: c1= 0
+        if c1 < 0: c1= 0 # évite d'avoir un indice de colonne négatifs
         c2= col + self.__A_LA_SUITE
-        if c2> self.__board.shape[1]: c2= self.__board.shape[1]
-        #####print(mat[l,c1:c2])
-
-        #lig2= lig+self.__A_LA_SUITE
-        #if lig2 > self.__board.shape[0]: lig2= self.__board.shape[0]
-        colonne = self.__board[lig,c1:c2]
+        if c2> self.__board.shape[1]: c2= self.__board.shape[1] # évite de déborder: L'indice max est la largeur du board
+ 
+        colonne = self.__board[lig,c1:c2] # Rappel: pour la notation c1:c2 le 1er indice (c1) est inclu, le 2ème (c2) est exclu.
         conv= np.convolve(colonne, fenetre)
         # print(f"Conv: {conv}")
         if self.__A_LA_SUITE in conv:
@@ -135,8 +132,8 @@ class Plateau:
         board_augmente= board_augmente.T[::-1] # On récupère la diagonale opposée
         diag2= np.diag(board_augmente)
         conv= np.convolve(diag2, fenetre)
-        print(f"diag1: {diag1}\ndiag2: {diag2}")
-        print(f"Conv: {conv}")
+        #print(f"diag1: {diag1}\ndiag2: {diag2}")
+        #print(f"Conv: {conv}")
         if self.__A_LA_SUITE in conv:
             return True
 
@@ -147,3 +144,7 @@ class Plateau:
     def init_board(self):
         self.__board[:,:]= 0
         return self.__board
+
+
+    def cellule_dispo(self, mat):
+        pass

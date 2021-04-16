@@ -5,7 +5,6 @@ import sys
 import os
 import time
 
-"""
 import random
 from keras.models import Sequential, load_model
 from keras.layers import Dense, Dropout
@@ -13,9 +12,7 @@ from keras.optimizers import Adam
 
 from collections import deque
 
-"""
-
-
+#import unittest
 
 sys.path.append("./classes")
 #sys.path.insert(0,"./classes") ####### A TESTER
@@ -38,8 +35,7 @@ def joue(joueur, jeu, es, model= None):
         colonne= joueur.bot_joue(jeu.ColonneDispo())
 
     elif joueur.get_type()== "JEDI":
-        colonne= joueur.bot_joue(jeu.ColonneDispo())
-
+        colonne= joueur.jedi_joue(jeu.ColonneDispo(), jeu.get_board(), model= model)
 
     matrice, fin_de_jeu, recompense= jeu.place_jeton(colonne,joueur.get_couleur())
     es.aff_matrice(jeu.get_board())
@@ -51,13 +47,16 @@ def joue(joueur, jeu, es, model= None):
 jeu= Plateau(largeur= 7, hauteur= 6, a_la_suite= 4)
 jeu.init_board()
 
+
 # Choix des joueurs
-joueur1= Alea(couleur= 1)
+joueur1= Humain(couleur= 1)
+#model= load_model("./modelconv250.h5")
+#joueur2= Jedi(model, couleur= -1)
 joueur2= Alea(couleur= -1)
 
 # Choix des entrées / sorties
-es= Console()
-#es= py_game()
+#es= Console()
+es= py_game()
 
 if es.get_type_entsort()== "pygame": # IMPOSER UN PLATEAU 7x6
     pass
@@ -66,15 +65,21 @@ if es.get_type_entsort()== "pygame": # IMPOSER UN PLATEAU 7x6
 dqn_agent= DQN(jeu.get_board())
 #print("shape du board:",jeu.get_board().shape)
 
-entrainement= 100
+entrainement= 2
 if entrainement: # Mode apprentissage
     cpt_partie_nulle= 0    
     for game in range(entrainement):
         #es= console()
 
         cur_state = jeu.init_board()
-        while True: 
-
+        while True:
+            
+            """
+            if joueur1.get_type()== "JEDI":
+                new_state, terminal, reward, action = joue(joueur1, jeu, es, model) #(1, game.player1)
+            else:
+                new_state, terminal, reward, action = joue(joueur1, jeu, es) #(1, game.player1)
+            """
             new_state, terminal, reward, action = joue(joueur1, jeu, es) #(1, game.player1)
             action= action-1 # Passage coordonnée compatible coord matrice
 
@@ -97,7 +102,15 @@ if entrainement: # Mode apprentissage
                 cpt_partie_nulle+= 1
                 break ## Affichage d'un message sur le plateau de jeu
 
-        # Joueur 2 joue
+            # Joueur 2 joue
+            """
+            if joueur2.get_type()== "JEDI":
+                print("ICIIIIII")
+                new_state, terminal, reward, action = joue(joueur2, jeu, es, model) #(1, game.player1)
+            else:
+                new_state, terminal, reward, action = joue(joueur2, jeu, es) #(1, game.player1)
+            """
+
             new_state, terminal, reward, action = joue(joueur2, jeu, es) #(1, game.player1)
             action= action-1 # Passage coordonnée compatible coord matrice
 
@@ -117,8 +130,19 @@ if entrainement: # Mode apprentissage
 
             # train the player
     print(f"Sauvegarde de l'agent. Nombre de partie nulle: {cpt_partie_nulle}")
-    dqn_agent.save_model("model.h5")
-    
+    dqn_agent.save_model(f"model-conv{entrainement}.h5")
+
+
+
+
+
+
+
+
+
+
+
+
 else: # Mode sans DQN
     es.aff_matrice(jeu.get_board())
     while True:
@@ -133,7 +157,12 @@ else: # Mode sans DQN
         if jeu.plein(): break ## Affichage d'un message sur le plateau de jeu
 
         # Joueur 2 joue
-        matrice, fin_de_jeu, recompense, _= joue(joueur2, jeu, es)
+        if joueur2.get_type()== "JEDI":
+            matrice, fin_de_jeu, recompense, _ = joue(joueur2, jeu, es, model) #(1, game.player1)
+        else:
+            matrice, fin_de_jeu, recompense, _ = joue(joueur2, jeu, es) #(1, game.player1)
+
+
 
         if fin_de_jeu:
             joueur1.recompense(-recompense)

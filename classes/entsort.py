@@ -52,7 +52,7 @@ class py_game(EntSort):
     __TYPE_ENTSORT= "pygame"
     
     def __init__(self):
-         #init  pygame.init ()
+        #init  pygame.init ()
         self.image = pygame.image.load ("./pygame/Grille.png")
         size = self.image.get_size ()
         self.screen = pygame.display.set_mode(size)
@@ -86,12 +86,12 @@ class py_game(EntSort):
             if row in colonne_disponible:
                 break
                 
-        print(f"row: {row}. Colonne disponnible: {colonne_disponible}")
+        #print(f"row: {row}. Colonne disponnible: {colonne_disponible}")
         return row
 
     
     def aff_matrice(self,matrice):
-        print(matrice)
+        #print(matrice)
         nb_ligne= matrice.shape[0]
         nb_colonne= matrice.shape[1]
         # Affichage
