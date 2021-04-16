@@ -146,5 +146,18 @@ class Plateau:
         return self.__board
 
 
-    def cellule_dispo(self, mat):
+    def matrice_cellule_dispo(self, mat):
+        mat0= np.zeros((self.__HAUTEUR, self.__LARGEUR))
+        col_dispo= self.ColonneDispo()
+        print(f"col_dispo: {col_dispo} shape de mat0: {mat0.shape}")
+        for el in col_dispo:
+            print(f"el: {el}")
+            a= np.where(mat[:,el-1]== 0) # Liste des élément à 0
+            print(f"a: {a}")
+            lig= a[0].max() # On prend l'élément le plus profond
+            print(f"lig: {lig}")
+            mat0[lig,el-1]= 1
+
+        return mat0
+
         pass

@@ -1,6 +1,7 @@
 import abc
 from abc import ABC, abstractmethod
 from random import randint
+import numpy as np
 
 class Joueur(ABC):
     _couleur_dispo=[-1,1]
@@ -168,10 +169,13 @@ class Jedi(Joueur):
 
     # Méthode spécifique à la classe Jedi
 
-    def jedi_joue(self,colonne_disponible, board, model):
+    def jedi_joue(self,colonne_disponible, board, jeu, model):
+        cell_dispo= jeu.matrice_cellule_dispo(board)
         mat= model.predict(board)
-        print(f"model.predict: {mat}")
-        col = int(input("colonne: "))
+        mat= mat * cell_dispo
+        col= (np.argmax(mat)) % mat.shape[1] + 1
+        print(f"col: {col}")
+        #col = int(input("colonne: "))
 
         return col
 

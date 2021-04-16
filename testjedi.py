@@ -35,7 +35,7 @@ def joue(joueur, jeu, es, model= None):
         colonne= joueur.bot_joue(jeu.ColonneDispo())
 
     elif joueur.get_type()== "JEDI":
-        colonne= joueur.jedi_joue(jeu.ColonneDispo(), jeu.get_board(), model= model)
+        colonne= joueur.jedi_joue(jeu.ColonneDispo(), jeu.get_board(), jeu, model= model)
 
     matrice, fin_de_jeu, recompense= jeu.place_jeton(colonne,joueur.get_couleur())
     es.aff_matrice(jeu.get_board())
@@ -49,14 +49,14 @@ jeu.init_board()
 
 
 # Choix des joueurs
-joueur1= Humain(couleur= 1)
-#model= load_model("./modelconv250.h5")
+joueur1= Alea(couleur= 1)
+#model= load_model("./modeles/model-conv10.h5")
 #joueur2= Jedi(model, couleur= -1)
 joueur2= Alea(couleur= -1)
 
 # Choix des entrées / sorties
-#es= Console()
-es= py_game()
+es= Console()
+#es= py_game()
 
 if es.get_type_entsort()== "pygame": # IMPOSER UN PLATEAU 7x6
     pass
@@ -65,7 +65,7 @@ if es.get_type_entsort()== "pygame": # IMPOSER UN PLATEAU 7x6
 dqn_agent= DQN(jeu.get_board())
 #print("shape du board:",jeu.get_board().shape)
 
-entrainement= 2
+entrainement= 100
 if entrainement: # Mode apprentissage
     cpt_partie_nulle= 0    
     for game in range(entrainement):
@@ -158,7 +158,7 @@ else: # Mode sans DQN
 
         # Joueur 2 joue
         if joueur2.get_type()== "JEDI":
-            matrice, fin_de_jeu, recompense, _ = joue(joueur2, jeu, es, model) #(1, game.player1)
+            matrice, fin_de_jeu, recompense, _ = joue(joueur2, jeu, es, model= model) #(1, game.player1)
         else:
             matrice, fin_de_jeu, recompense, _ = joue(joueur2, jeu, es) #(1, game.player1)
 
