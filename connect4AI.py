@@ -52,10 +52,13 @@ jeu= Plateau(largeur= 7, hauteur= 6, a_la_suite= 4)
 jeu.init_board()
 
 # Choix des joueurs
-joueur1= Humain(couleur= 1)
+#joueur1= Humain(couleur= 1)
+model1= load_model("./model-conv100.h5")
+joueur1= Jedi(model1, couleur= -1)
+
 #joueur2= Humain(couleur= -1)
-model= load_model("./model-conv100.h5")
-joueur2= Jedi(model, couleur= -1)
+model2= load_model("./model-conv100.h5")
+joueur2= Jedi(model2, couleur= -1)
 
 ########### FAIRE UN CODE CORRECT POUR CHOIX JEDI AVEC IF
 
@@ -84,7 +87,7 @@ if entrainement: # Mode apprentissage
         while True: 
 
             if joueur1.get_type()== "JEDI":
-                new_state, terminal, reward, action = joue(joueur1, jeu, es, model) #(1, game.player1)
+                new_state, terminal, reward, action = joue(joueur1, jeu, es, model1) #(1, game.player1)
             else:
                 new_state, terminal, reward, action = joue(joueur1, jeu, es) #(1, game.player1)
 
@@ -111,7 +114,7 @@ if entrainement: # Mode apprentissage
 
         # Joueur 2 joue
             if joueur2.get_type()== "JEDI":
-                new_state, terminal, reward, action = joue(joueur2, jeu, es, model) #(1, game.player1)
+                new_state, terminal, reward, action = joue(joueur2, jeu, es, model2) #(1, game.player1)
             else:
                 new_state, terminal, reward, action = joue(joueur2, jeu, es) #(1, game.player1)
             action= action-1 # Passage coordonnée compatible coord matrice
@@ -132,7 +135,7 @@ if entrainement: # Mode apprentissage
 
             # train the player
     print(f"Sauvegarde de l'agent. Nombre de partie nulle: {cpt_partie_nulle}")
-    dqn_agent.save_model("model.h5")
+    dqn_agent.save_model(f"model{entrainement}.h5")
     
 else: # Mode sans DQN
     es.aff_matrice(jeu.get_board())
