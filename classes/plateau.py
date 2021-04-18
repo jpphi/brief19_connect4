@@ -58,9 +58,6 @@ class Plateau:
             if m== 0: return False
         return True
     
-    def get_board(self):
-        return self.__board
-    
     def ColonneDispo(self):
         cd=[]
         for i in range(self.__LARGEUR):
@@ -75,7 +72,11 @@ class Plateau:
         # On place le jeton
         col= col- 1 # On joue à partir de la colonne 1 qui correspond à la colonne 0 du __board
         colonne= self.__board[:,col].reshape(self.__board.shape[0]) # on récupère la colonne 'col' de la matrice board
+        #print("Place jeton avant np.where: colonne: ",colonne)
         a= np.where(colonne== 0) # Liste des élément à 0
+        #print("Place jeton aprés np.where: a: ",a)
+        if len(a[0]) == 0:
+            print("\nERREUR dans place_jeton longeur matrice a nulle !!!! \n")
         lig= a[0].max() # On prend l'élément le plus profond
         self.__board[lig,col]= couleur # On place le jeton au dessus de la pile à la 1ère case "vide"
         
@@ -160,4 +161,10 @@ class Plateau:
 
         return mat0
 
-        pass
+    def get_board(self):
+        #board= np.copy(self.__board) 
+        return np.copy(self.__board)
+    
+    def get_A_LA_SUITE(self):
+        return self.__A_LA_SUITE
+    

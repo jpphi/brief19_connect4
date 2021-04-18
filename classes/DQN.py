@@ -39,12 +39,12 @@ class DQN:
         model.add(Dense(7, activation="softmax"))
         """
 
-        model.add(Dense(24, input_dim= state_shape[0], activation="relu")) # VOIR EVENTUELLEMENT SANS [0]
-        model.add(Dense(state_shape[0] * state_shape[1], input_shape= state_shape, activation="relu"))
-        #model.add(Dense(48, activation="relu"))
-        #model.add(Dense(32, activation="relu"))
+        model.add(Dense(state_shape[0] * state_shape[1] * 10, input_shape= state_shape, activation="relu")) # VOIR EVENTUELLEMENT SANS [0]
+        model.add(Dense(state_shape[0] * state_shape[1] * 5, activation="relu"))
+        model.add(Dense(state_shape[0] * state_shape[1] * 2, activation="relu"))
+        model.add(Dense(state_shape[0] * state_shape[1], activation="relu"))
         #model.add(Flatten())
-        model.add(Dense(7, activation="softmax")) #state_shape[1]
+        model.add(Dense(state_shape[1], activation="softmax")) #state_shape[1]
 
 
         # Nouvelle approche avec des CNN
@@ -108,7 +108,7 @@ class DQN:
         self.memory.append([state, action, reward, new_state, done])
 
     def replay(self):
-        batch_size = 10
+        batch_size = 32
         if len(self.memory) < batch_size: 
             #print(f"Méthode replay: self memory= {self.memory} < {batch_size}")
             return
@@ -117,11 +117,11 @@ class DQN:
         #print(f"Méthode replay: sampleshape= {len(samples)}")
         #print(f"Méthode replay: samples= {samples}")
         for sample in samples:
-            #print("................. for .................")
             state, action, reward, new_state, done = sample
             #state= state.reshape(6,7,1)
             #print(f"Méthode remenber, state shape: {state.shape} \ntarget=\n {state}")
             target = self.target_model.predict(state)
+
             print(f"Méthode remenber, state shape: {target.shape} \ntarget=\n {target}")
             if done:
                 target[0][action] = reward

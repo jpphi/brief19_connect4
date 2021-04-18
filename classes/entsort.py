@@ -24,6 +24,7 @@ class Console(EntSort):
 
 
     def entre_cp(self, colonne_disponible, message=""):
+        #print(f"entre_cp: colonne_disponible: {colonne_disponible:} message: {message}")
         while True:
             cp= input(message)
             try:
@@ -48,7 +49,7 @@ class Console(EntSort):
     def get_type_entsort(self):
         return self.__TYPE_ENTSORT
         
-class py_game(EntSort):
+class PyGame(EntSort):
     __TYPE_ENTSORT= "pygame"
     
     def __init__(self):
@@ -63,6 +64,7 @@ class py_game(EntSort):
         self.pionrouge = pygame.image.load("./pygame/PionRouge.png")
 
     def entre_cp(self, colonne_disponible, message=""):
+        #print(f"entre_cp: colonne_disponible: {colonne_disponible:} message: {message}")
         if message== "joueur1":
             bandeau= pygame.image.load("./pygame/joueur1joue.png")
             self.screen.blit(bandeau, (0,0))
@@ -91,7 +93,7 @@ class py_game(EntSort):
 
     
     def aff_matrice(self,matrice):
-        #print(matrice)
+        print(f"aff_matrice():\n{matrice}")
         nb_ligne= matrice.shape[0]
         nb_colonne= matrice.shape[1]
         # Affichage
