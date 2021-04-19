@@ -50,7 +50,7 @@ Afin d'anticiper la dette technique, notre code est modulaire, en POO avec les c
 
 * Joueur  
 
-![plot](./ressources/classes_Joueur.png)
+![plot](./ressources[/clas](ses_Joueur.png[plot](./ressourcesrog01))
 
 * Game  
 
@@ -68,7 +68,31 @@ Notre programme supporte plusieurs paramètres en ligne de commande permettant d
 
 * Choisir le mode de jeu  
 * Définir les dimensions du plateau  
-* Options pour entraîner l'IA  ​
+* Options pour entraîner l'IA
+
+Utilisation de connect4AI en ligne de commande:
+
+$ python connect4AI --help 
+usage: connect4AI.py [-h] [--play1 PLAY1] [--play2 PLAY2] [--inout INOUT] [--board BOARD BOARD BOARD] [--training_mode TRAINING_MODE] [--tournement_mode TOURNEMENT_MODE] [--modelplay1 MODELPLAY1] [--modelplay2 MODELPLAY2]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --play1 PLAY1, -p1 PLAY1
+                        --play1 "Humain" or "CodeR4" or "CodeR43" or "Jedi" or nothing (=Humain)
+  --play2 PLAY2, -p2 PLAY2
+                        --play2 "Humain" or "CodeR4" or "CodeR43" or "Jedi" or nothing (=Humain)
+  --inout INOUT, -io INOUT
+                        --inout "console" or "pygame" or "tkinter" or nothing (=console)
+  --board BOARD BOARD BOARD, -b BOARD BOARD BOARD
+                        --board integer integer integer
+  --training_mode TRAINING_MODE, -trm TRAINING_MODE
+                        --training_mode integer
+  --tournement_mode TOURNEMENT_MODE, -tm TOURNEMENT_MODE
+                        --tournement_mode integer
+  --modelplay1 MODELPLAY1, -mp1 MODELPLAY1
+                        --modelplay1 path/file.h5
+  --modelplay2 MODELPLAY2, -mp2 MODELPLAY2
+                        --modelplay2 path/file.h5
 
 ***Statistiques de JEDI : TBD***  
 
@@ -94,7 +118,7 @@ Travail en agence de développement organisée en mode ***Agile/Scrum*** :
 * [Cécilia](https://github.com/ccylia)  
 * [Hachem](https://github.com/hachemmosbah)  
 * [Olivier](https://github.com/Olivier-Prince)  
-* Roger  
+* [Roger](https://github.com/rog01)  
 * [Jean-Pierre](https://github.com/jpphi)  
 
 ## Critères de performance  

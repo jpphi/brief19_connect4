@@ -55,7 +55,7 @@ if os.environ.get('DISPLAY','') == '':
 if __name__ == "__main__":
 
     arguments = parser.parse_args()
-    print("arguement",arguments)    
+    #print("arguement",arguments)    
 
  
     if arguments.play1 not in ["Humain","CodeR4","CodeR43","Jedi","Alea"]:
@@ -80,5 +80,3 @@ if __name__ == "__main__":
 
     if game.training_mode(): game.apprentissage()
     if game.tournement_mode(): game.tournoi()
-
-    print("arguement",arguments)
