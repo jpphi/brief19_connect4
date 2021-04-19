@@ -146,7 +146,7 @@ class Plateau:
         self.__board[:,:]= 0
         return self.__board
 
-
+    """
     def matrice_cellule_dispo(self, mat):
         mat0= np.zeros((self.__HAUTEUR, self.__LARGEUR))
         col_dispo= self.ColonneDispo()
@@ -160,6 +160,7 @@ class Plateau:
             mat0[lig,el-1]= 1
 
         return mat0
+    """
 
     def get_board(self):
         #board= np.copy(self.__board) 

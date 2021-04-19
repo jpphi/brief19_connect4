@@ -3,7 +3,6 @@ import tensorflow as tf
 import keras
 import numpy as np
 
-
 from keras.models import Sequential,  Model
 
 from keras.layers import Dense, Dropout, Flatten, Conv2D, Input, MaxPooling2D, Reshape, BatchNormalization
@@ -30,12 +29,10 @@ class DQN:
         model = Sequential()
         state_shape  = self.env.shape
 
-        model.add(Dense(state_shape[0] * state_shape[1], input_shape= state_shape, activation="relu")) # VOIR EVENTUELLEMENT SANS [0]
-        model.add(Dense(state_shape[0] * state_shape[1] * 10, input_shape= state_shape, activation="relu")) # VOIR EVENTUELLEMENT SANS [0]
-        model.add(Dense(state_shape[0] * state_shape[1] * 5, input_shape= state_shape, activation="relu")) # VOIR EVENTUELLEMENT SANS [0]
-        model.add(Dense(state_shape[0] * state_shape[1], input_shape= state_shape, activation="relu"))
-
-        model.add(Dense(7))
+        model.add(Dense(20, input_dim=state_shape[0]*state_shape[1], activation='relu'))
+        model.add(Dense(100, activation='relu'))
+        model.add(Dense(100, activation='relu'))
+        model.add(Dense(state_shape[1], activation='linear'))
 
         model.compile(loss="mean_squared_error", optimizer=Adam(lr=self.learning_rate))
 
@@ -81,6 +78,7 @@ class DQN:
             state, action, reward, new_state, done = sample
             #state= state.reshape(6,7,1)
             #print(f"Méthode remenber, state shape: {state.shape} \ntarget=\n {state}")
+            state = state.reshape(1, self.env.shape[0] * self.env.shape[1])
             target = self.target_model.predict(state)
 
             print(f"Méthode remenber, state shape: {target.shape} \ntarget=\n {target}")
@@ -89,7 +87,7 @@ class DQN:
             else:
                 #Q_future = max(self.target_model.predict(new_state)[0])
                 #new_state= new_state.reshape(6,7,1)
-
+                new_state = new_state.reshape(1, self.env.shape[0] * self.env.shape[1])
                 Q_future = max(self.target_model.predict(new_state)[0])
                 #print(f"Méthode remenber, target future= {Q_future}")
                 target[0][action] = reward + Q_future * self.gamma

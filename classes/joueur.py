@@ -171,14 +171,24 @@ class Jedi(Joueur):
 
     def jedi_joue(self,colonne_disponible, board, jeu, model= None):
         print("model:",model)
-        cell_dispo= jeu.matrice_cellule_dispo(board)
-        mat= model.predict(board)
-        mat= mat * cell_dispo
-        col= (np.argmax(mat)) % mat.shape[1] + 1
-        print(f"col: {col}")
+        #cell_dispo= jeu.matrice_cellule_dispo(board)
+        b2= np.copy(board.reshape(1,board.shape[0] * board.shape[1]))
+        mat= model.predict(b2)[0]
+        print(f"dans jedi joue mat= {mat} ")
+        #mat= mat * cell_dispo
+        while True:
+            col= (np.argmax(mat))
+            if col+1 not in colonne_disponible:
+                mat[col]= -50
+                #print("ERREUR ! Dans jedi_joue, le board est plein, on n'aurais pas du arriver ici!")
+            else: break
+
+                
+
+        print(f"dans jedi joue col: {col}")
         #col = int(input("colonne: "))
 
-        return col
+        return col + 1
 
     def get_model(self):
         return self.model
@@ -259,6 +269,7 @@ class CodeR(Joueur):
 
         if self.__niveau== 4:
             return self.bot_joue(colonne_disponible) # on s'en remet au hazard
+            
         elif self.__niveau== 43: # On cherche à placer 3 pions ou empecher l'adversaire d'en placer 3
             print("\n43\n")
             fenetre= np.array( (a_la_suite-1) * [self.__couleur])
@@ -361,45 +372,4 @@ class CodeR(Joueur):
         return False
 
 
-
-
-
-    
-    """
-            # l IA joue en mettant -1 pour gagner
-            #if verif_colonne(j) == j: #si on peut jouer sur cette colonne
-            if colonne_disponible(self,matrice,j) == True: #si on peut jouer sur cette colonne
-                matrice[ligne_vide(self,j),j] = -1
-                print('m',matrice)
-                if verif_gagnant(self) == -1:
-                    col = j
-                    matrice[ligne_vide(self,j)+1,j] = 0 # On remets à zéro la ligne que l'on vient de modifier
-                    self.gagnant = 0 # On remest gagant à zero
-                    break
-                matrice[ligne_vide(self,j)+1,j] = 0 # On incremente l indice de ligne pour effacer ce que l on vient d ecrire car 
-                self.gagnant = 0                    # car en rajoutant un element , la derniere ligne vide est décalée au dessus
-                print('ligne_vide(j)',ligne_vide(self,j))
-                print('matrice[ligne_vide(j),j]',matrice[ligne_vide(self,j),j])
-        # l IA bloque en mettant -1  la ou l adversiare peur gagne avec un 1
-        # on n 'a pas trouvé de coup gagnant si col = -1 
-        if col == -1:
-            for j in range(7):
-                if colonne_disponible(self,matrice,j) == True: #si on peut jouer sur cette colonne
-                    matrice[ligne_vide(self,j),j] = 1
-                    print('======================================')
-                    print('M',matrice)
-                    # ajout d un break pour sortir quand on a trouve une menace
-                    if verif_gagnant(self) == 1:
-                        col = j
-                        print('colonne',col)
-                        matrice[ligne_vide(self,j)+1,j] = 0
-                        self.gagnant = 0
-                        break  
-                    matrice[ligne_vide(self,j)+1,j] = 0
-                    self.gagnant = 0                                 
-            if col == -1:
-                if colonne_disponible(self,matrice,j) == True:
-                    col = j                
-        return col 
-    """
 

@@ -162,7 +162,8 @@ class Game():
 
                 # train the player
         print(f"Sauvegarde de l'agent. Nombre de partie nulle: {cpt_partie_nulle}")
-        dqn_agent.save_model(f"model-m-10m-5m-m-cm {self.__training_mode}-{self.__joueur1.get_type()}43 vs {self.__joueur2.get_type()}43 {j1} {j2}.h5")
+        dqn_agent.save_model(f"model-m-10m-5m-m-cm {self.__training_mode}-{self.__joueur1.get_type()}43 "+\
+            f"vs {self.__joueur2.get_type()}43 {j1} {j2} {cpt_partie_nulle}.h5")
         
 
 
@@ -171,6 +172,8 @@ class Game():
         cpt_partie_nulle= 0  
         j1= 0
         j2= 0
+
+        print(f"methode tournoi, tournement= {type(int(self.__tournement_mode))}")
  
         for game in range(self.__tournement_mode):
 
