@@ -1,5 +1,6 @@
 import sys
 import numpy as np
+import time
 
 from keras.models import load_model
 
@@ -36,6 +37,10 @@ class Game():
             joueur= Humain(couleur)
             return joueur
 
+        if type_joueur== "Alea":
+            joueur= Alea(couleur)
+            return joueur
+
         if type_joueur== "CodeR4":
             joueur= CodeR(couleur,niveau= 4)
             return joueur
@@ -69,9 +74,7 @@ class Game():
     def __joue(self, joueur, jeu, es, model= None):
         #print(f"dans joue: {joueur.get_couleur()} - {joueur.get_type()} - {es.get_type_entsort()}")
         if joueur.get_type()== "HUMAIN":
-            #print("avant entre_cp : Humain")
             colonne= es.entre_cp(jeu.ColonneDispo(),  message= f"{joueur.nom()} 1, colonne ?: ")
-            #print(f"aprés cp : colonne= {colonne}")
             #time.sleep(0.5)
         elif joueur.get_type()== "BOT":
             colonne= joueur.bot_joue(jeu.ColonneDispo())
@@ -88,9 +91,6 @@ class Game():
 
 
         return matrice, fin_de_jeu, recompense, colonne
-
-
-
 
     def apprentissage(self): # Mode apprentissage
         cpt_partie_nulle= 0  
@@ -162,7 +162,7 @@ class Game():
 
                 # train the player
         print(f"Sauvegarde de l'agent. Nombre de partie nulle: {cpt_partie_nulle}")
-        dqn_agent.save_model(f"model{self.__training_mode}-{self.__joueur1.get_type()}4 vs {self.__joueur2.get_type()}43 {j1} {j2}.h5")
+        dqn_agent.save_model(f"model-m-10m-5m-m-cm {self.__training_mode}-{self.__joueur1.get_type()}43 vs {self.__joueur2.get_type()}43 {j1} {j2}.h5")
         
 
 
@@ -174,6 +174,7 @@ class Game():
  
         for game in range(self.__tournement_mode):
 
+            matrice = self.__jeu.init_board()
 
             self.__es.aff_matrice(self.__jeu.get_board())
             while True:
@@ -189,7 +190,10 @@ class Game():
                     j1+=1
                     break
 
-                if self.__jeu.plein(): break ## Affichage d'un message sur le plateau de jeu
+                if self.__jeu.plein():
+                    print(f"Jeu plein joueur {self.__joueur1} vient de jouer")
+                    cpt_partie_nulle+= 1
+                    break ## Affichage d'un message sur le plateau de jeu: A FAIRE
 
                 # Joueur 2 joue
                 if self.__joueur2.get_type()== "JEDI":
@@ -203,12 +207,18 @@ class Game():
                     j2+= 1
                     break
 
-                if self.__jeu.plein(): break ## Affichage d'un message sur le plateau de jeu
+                if self.__jeu.plein():
+                    print(f"Jeu plein joueur {self.__joueur2} vient de jouer")
+                    cpt_partie_nulle+= 1
+                    break ## Affichage d'un message sur le plateau de jeu
 
 
             print(f"Récompence joueur 1: {self.__joueur1.get_recompense()}. Nb victoire: {j1}")
             print(f"Récompence joueur 2: {self.__joueur2.get_recompense()}. Nb victoire: {j2}")
+            print(f"Nombre de parties nulle: {cpt_partie_nulle}")
+            
+            time.sleep(1) # 1seconde entre partie du tournoi pour lecture des infos
 
             self.__es.aff_matrice(self.__jeu.get_board())
 
-            input(f"Fin de partie: entrez pour quitter !")
+        input(f"Fin de tournoi: entrez pour quitter !")

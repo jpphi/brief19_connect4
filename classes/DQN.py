@@ -26,52 +26,21 @@ class DQN:
         self.model        = self.create_model()
         self.target_model = self.create_model()
 
-    def create_model222222(self):
-        model   = Sequential()
+    def create_model(self):
+        model = Sequential()
         state_shape  = self.env.shape
 
-        """
-        x = Input(shape=(32, 32, 3), batch_size=64)
-
-        
-        model.add(Conv2D(42, kernel_size=3, activation='relu', input_shape=(6,7)))
-        model.add(Flatten())    
-        model.add(Dense(7, activation="softmax"))
-        """
-
+        model.add(Dense(state_shape[0] * state_shape[1], input_shape= state_shape, activation="relu")) # VOIR EVENTUELLEMENT SANS [0]
         model.add(Dense(state_shape[0] * state_shape[1] * 10, input_shape= state_shape, activation="relu")) # VOIR EVENTUELLEMENT SANS [0]
-        model.add(Dense(state_shape[0] * state_shape[1] * 5, activation="relu"))
-        model.add(Dense(state_shape[0] * state_shape[1] * 2, activation="relu"))
-        model.add(Dense(state_shape[0] * state_shape[1], activation="relu"))
-        #model.add(Flatten())
-        model.add(Dense(state_shape[1], activation="softmax")) #state_shape[1]
+        model.add(Dense(state_shape[0] * state_shape[1] * 5, input_shape= state_shape, activation="relu")) # VOIR EVENTUELLEMENT SANS [0]
+        model.add(Dense(state_shape[0] * state_shape[1], input_shape= state_shape, activation="relu"))
 
-
-        # Nouvelle approche avec des CNN
-
-        """
-        output_nodes = 7  # REMPLACER PAR shape[1]
-        n_classes = 1
-        batch_size_ = 20 
-        epoch = 20 
-
-        input_layer = Input(shape=(6,7,1)) # VOIR AVEC SHAPE MATRICE
-        conv1 = Conv2D(16,3,padding="same",activation="relu", input_shape = (6,7,1))(input_layer)
-        pool1 = MaxPooling2D(pool_size=(4,4),padding="same")(conv1)  #=> peut renforcer la performance .... à voir ???
-        flat = Flatten()(pool1)
-        hidden1 = Dense(10, activation='softmax')(flat) #relu
-
-        btNormLayer = BatchNormalization()(hidden1) 
-        output_layer = Dense(output_nodes * n_classes, activation="softmax")(btNormLayer) 
-        output_layer2 = Dense(output_nodes * n_classes, activation="relu")(output_layer) 
-        output_reshape = Reshape((output_nodes, n_classes))(output_layer2)
-        model = Model(inputs=input_layer, outputs=output_reshape)  # je pense qu'il manquait le reshape hier ....
-
-        """
+        model.add(Dense(7))
 
         model.compile(loss="mean_squared_error", optimizer=Adam(lr=self.learning_rate))
-        #model.compile(loss='mean_squared_error', optimizer='adam', sample_weight_mode='temporal')
+
         return model
+
     """
     def act(self, state):
         self.epsilon *= self.epsilon_decay
@@ -80,21 +49,13 @@ class DQN:
             return self.env.action_space.sample()
         return np.argmax(self.model.predict(state)[0])
     """
-    def  create_model(self):
+
+    def  create_model_qui_fonctionne(self):
         model = Sequential()
         state_shape  = self.env.shape
 
         model.add(Dense(24, input_shape= state_shape, activation="relu")) # VOIR EVENTUELLEMENT SANS [0]
         model.add(Dense(state_shape[0] * state_shape[1], input_shape= state_shape, activation="relu"))
-
-        #model.add(Flatten())
-        #model.add(Dense(50, activation='relu'))
-        #model.add(Dense(50, activation='relu'))
-        #model.add(Dense(50, activation='relu'))
-        #model.add(Dense(50, activation='relu'))
-        #model.add(Dense(50, activation='relu'))
-        #model.add(Dense(50, activation='relu'))
-        #model.add(Dense(50, activation='relu'))
 
         model.add(Dense(7))
 

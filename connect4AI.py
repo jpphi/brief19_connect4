@@ -4,7 +4,6 @@ import numpy as np
 import pygame
 import sys
 import os
-import time
 
 """
 from keras.models import load_model
@@ -33,8 +32,8 @@ if os.environ.get('DISPLAY','') == '':
 
 
 
-game= Game(play1= "Jedi", play2= "CodeR4", inout= "console", board= (6,7,4), training_mode= 5, tournement_mode= 0, \
-    modelplay1= "./model420-210-84-7 250-ROGER - vs ROGER j1 123 - j2 119 n 8.h5")
+game= Game(play1= "CodeR43", play2= "CodeR43", inout= "console", board= (6,7,4), training_mode= 50, tournement_mode= 0, \
+    modelplay1= "./modeles/m24-42-7/model 257-CODER43 vs CODER43 102 91.h5", modelplay2="")
 
 if game.training_mode(): game.apprentissage()
 if game.tournement_mode(): game.tournoi()
