@@ -176,6 +176,10 @@ class Jedi(Joueur):
         mat= model.predict(b2)[0]
         print(f"dans jedi joue mat= {mat} ")
         #mat= mat * cell_dispo
+
+
+
+        ########### CAS ETUDE SI PREDICT RENVOIE COL INDISPONIBLE RETRAIVAILLER CODE
         while True:
             col= (np.argmax(mat))
             if col+1 not in colonne_disponible:
