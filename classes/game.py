@@ -2,7 +2,8 @@ import sys
 import numpy as np
 import time
 
-from keras.models import load_model
+from keras.models import load_model, save_model
+from tensorflow.keras.optimizers import Adam
 
 sys.path.append("./classes")
 
@@ -97,9 +98,12 @@ class Game():
         j1= 0
         j2= 0
         # DQN
-        dqn_agent= DQN(self.__jeu.get_board())
+        dqn_agent= DQN(self.__jeu.get_board(), num_model= num_model)
+        #dqn_agent= load_model("./model-20_100_150_100_50_20_1_m-col 200-CODER43 vs CODER43 70 85 45.h5") #DQN(self.__jeu.get_board(), num_model= num_model)
+        #dqn_agent= model.compile(loss="mean_squared_error", optimizer=Adam(lr=0.005))
+
         #print("shape du board:",jeu.get_board().shape)
-    
+        i_sav_iteration= 1
         for game in range(self.__training_mode):
             #es= console()
 
@@ -159,10 +163,12 @@ class Game():
                     cpt_partie_nulle+= 1
                     break ## Affichage d'un message sur le plateau de jeu
                 print("Joueur 2. Fin jeu plein ?")
+            if i_sav_iteration % 25== 0: dqn_agent.save_model(f"modelprov {i_sav_iteration}.h5")
+            i_sav_iteration+= 1
 
                 # train the player
         print(f"Sauvegarde de l'agent. Nombre de partie nulle: {cpt_partie_nulle}")
-        dqn_agent.save_model(f"model-20-100-100-1 {self.__training_mode}-{self.__joueur1.get_type()}43 "+\
+        dqn_agent.save_model(f"model-20_100_150_100_50_20_1_m-col {self.__training_mode}-{self.__joueur1.get_type()}43 "+\
             f"vs {self.__joueur2.get_type()}43 {j1} {j2} {cpt_partie_nulle}.h5")
         
 

@@ -170,11 +170,11 @@ class Jedi(Joueur):
     # Méthode spécifique à la classe Jedi
 
     def jedi_joue(self,colonne_disponible, board, jeu, model= None):
-        print("model:",model)
+        #print("model:",model)
         #cell_dispo= jeu.matrice_cellule_dispo(board)
         b2= np.copy(board.reshape(1,board.shape[0] * board.shape[1]))
         mat= model.predict(b2)[0]
-        print(f"dans jedi joue mat= {mat} ")
+        #print(f"dans jedi joue mat= {mat} ")
         #mat= mat * cell_dispo
 
 

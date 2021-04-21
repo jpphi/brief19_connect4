@@ -3,15 +3,18 @@ import tensorflow as tf
 import keras
 import numpy as np
 
-from keras.models import Sequential,  Model
+from tensorflow.keras.models import Sequential,  Model
 
-from keras.layers import Dense, Dropout, Flatten, Conv2D, Input, MaxPooling2D, Reshape, BatchNormalization
-from keras.optimizers import Adam
+#from keras.layers import Dense, Dropout, Flatten, Conv2D, Input, MaxPooling2D, Reshape, BatchNormalization
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.optimizers import Adam
 
 from collections import deque
 
+from tensorflow.python.keras.layers.preprocessing.category_encoding import _NUM_ELEMENTS_NAME
+
 class DQN:
-    def __init__(self, env):
+    def __init__(self, env, num_model= 1):
         self.env     = env
         self.memory  = deque(maxlen=20000) # initialement à 2000
         
@@ -22,16 +25,49 @@ class DQN:
         self.learning_rate = 0.005
         self.tau = .125
 
-        self.model        = self.create_model()
-        self.target_model = self.create_model()
+        self.model        = self.create_model(num_model)
+        self.target_model = self.create_model(num_model)
 
-    def create_model(self):
+    def create_model_20_100_100_1(self):
         model = Sequential()
         state_shape  = self.env.shape
 
         model.add(Dense(20, input_dim=state_shape[0]*state_shape[1], activation='relu'))
         model.add(Dense(100, activation='relu'))
         model.add(Dense(100, activation='relu'))
+        model.add(Dense(state_shape[1], activation='linear'))
+
+        model.compile(loss="mean_squared_error", optimizer=Adam(lr=self.learning_rate))
+
+        return model
+
+    def create_model(self, numero):
+        model = Sequential()
+        state_shape  = self.env.shape
+
+        if numero== 1:
+            model.add(Dense(20, input_dim=state_shape[0]*state_shape[1], activation='relu'))
+            model.add(Dense(100, activation='relu'))
+            model.add(Dense(150, activation='relu'))
+            model.add(Dense(100, activation='relu'))
+            model.add(Dense(50, activation='relu'))
+            model.add(Dense(20, activation='relu'))
+            model.add(Dense(state_shape[1], activation='linear'))
+
+            model.compile(loss="mean_squared_error", optimizer=Adam(lr=self.learning_rate))
+
+        return model
+
+    def create_model_sav(self):
+        model = Sequential()
+        state_shape  = self.env.shape
+
+        model.add(Dense(20, input_dim=state_shape[0]*state_shape[1], activation='relu'))
+        model.add(Dense(100, activation='relu'))
+        model.add(Dense(150, activation='relu'))
+        model.add(Dense(100, activation='relu'))
+        model.add(Dense(50, activation='relu'))
+        model.add(Dense(20, activation='relu'))
         model.add(Dense(state_shape[1], activation='linear'))
 
         model.compile(loss="mean_squared_error", optimizer=Adam(lr=self.learning_rate))
