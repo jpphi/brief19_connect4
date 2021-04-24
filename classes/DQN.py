@@ -14,9 +14,13 @@ from collections import deque
 from tensorflow.python.keras.layers.preprocessing.category_encoding import _NUM_ELEMENTS_NAME
 
 class DQN:
-    def __init__(self, env, num_model= 1):
+    MOD_CONV= 2 # Modele réseau de neuronne convolutionnel
+    MOD_DENSE= 1 # Modele réseau de neuronne dense
+    LOAD_MODEL= ""
+
+    def __init__(self, env, num_model= MOD_DENSE, loadmodel= LOAD_MODEL):
         self.env     = env
-        self.memory  = deque(maxlen=20000) # initialement à 2000
+        self.memory  = deque(maxlen=2000) # initialement à 2000
         
         self.gamma = 0.85
         self.epsilon = 1.0
@@ -25,27 +29,21 @@ class DQN:
         self.learning_rate = 0.005
         self.tau = .125
 
-        self.model        = self.create_model(num_model)
-        self.target_model = self.create_model(num_model)
 
-    def create_model_20_100_100_1(self):
+
+        self.model        = self.create_model(num_model, loadmodel)
+        self.target_model = self.create_model(num_model, loadmodel)
+        self.num_model= num_model
+
+
+
+    def create_model(self, numero, loadmodel):
         model = Sequential()
         state_shape  = self.env.shape
-
-        model.add(Dense(20, input_dim=state_shape[0]*state_shape[1], activation='relu'))
-        model.add(Dense(100, activation='relu'))
-        model.add(Dense(100, activation='relu'))
-        model.add(Dense(state_shape[1], activation='linear'))
-
-        model.compile(loss="mean_squared_error", optimizer=Adam(lr=self.learning_rate))
-
-        return model
-
-    def create_model(self, numero):
-        model = Sequential()
-        state_shape  = self.env.shape
-
-        if numero== 1:
+        """
+        state = state.reshape(1, self.env.shape[0] , self.env.shape[1],1)
+        """
+        if numero== self.MOD_DENSE and loadmodel== "":
             model.add(Dense(20, input_dim=state_shape[0]*state_shape[1], activation='relu'))
             model.add(Dense(100, activation='relu'))
             model.add(Dense(150, activation='relu'))
@@ -56,21 +54,21 @@ class DQN:
 
             model.compile(loss="mean_squared_error", optimizer=Adam(lr=self.learning_rate))
 
-        return model
 
-    def create_model_sav(self):
-        model = Sequential()
-        state_shape  = self.env.shape
+        elif numero== self.MOD_CONV and loadmodel== "":
 
-        model.add(Dense(20, input_dim=state_shape[0]*state_shape[1], activation='relu'))
-        model.add(Dense(100, activation='relu'))
-        model.add(Dense(150, activation='relu'))
-        model.add(Dense(100, activation='relu'))
-        model.add(Dense(50, activation='relu'))
-        model.add(Dense(20, activation='relu'))
-        model.add(Dense(state_shape[1], activation='linear'))
+            model.add(Conv2D(16,3,padding="same", input_shape=(state_shape[0],state_shape[1],1), activation='relu'))
+            model.add(MaxPooling2D(pool_size=(4,4),padding="same"))
+            model.add(Flatten())
+            model.add(Dense(50, activation='relu'))
+            model.add(Dense(50, activation='relu'))
+            model.add(Dense(50, activation='relu'))
+            model.add(Dense(state_shape[1], activation='linear'))
 
-        model.compile(loss="mean_squared_error", optimizer=Adam(lr=self.learning_rate))
+            model.compile(loss="mean_squared_error", optimizer=Adam(lr=self.learning_rate))
+
+        elif loadmodel!= "":
+            pass
 
         return model
 
@@ -82,20 +80,6 @@ class DQN:
             return self.env.action_space.sample()
         return np.argmax(self.model.predict(state)[0])
     """
-
-    def  create_model_qui_fonctionne(self):
-        model = Sequential()
-        state_shape  = self.env.shape
-
-        model.add(Dense(24, input_shape= state_shape, activation="relu")) # VOIR EVENTUELLEMENT SANS [0]
-        model.add(Dense(state_shape[0] * state_shape[1], input_shape= state_shape, activation="relu"))
-
-        model.add(Dense(7))
-
-        model.compile(loss="mean_squared_error", optimizer=Adam(lr=self.learning_rate))
-
-        return model
-
 
     def remember(self, state, action, reward, new_state, done):
         #print("Méthode remenber")
@@ -114,16 +98,27 @@ class DQN:
             state, action, reward, new_state, done = sample
             #state= state.reshape(6,7,1)
             #print(f"Méthode remenber, state shape: {state.shape} \ntarget=\n {state}")
-            state = state.reshape(1, self.env.shape[0] * self.env.shape[1])
+            if self.num_model== self.MOD_DENSE:
+                state = state.reshape(1, self.env.shape[0] * self.env.shape[1])
+            elif self.num_model== self.MOD_CONV:
+                state = state.reshape(1, self.env.shape[0] , self.env.shape[1],1)
+            else:
+                raise ValueError("Model non défini !")
+
             target = self.target_model.predict(state)
 
             print(f"Méthode remenber, state shape: {target.shape} \ntarget=\n {target}")
             if done:
                 target[0][action] = reward
             else:
-                #Q_future = max(self.target_model.predict(new_state)[0])
-                #new_state= new_state.reshape(6,7,1)
-                new_state = new_state.reshape(1, self.env.shape[0] * self.env.shape[1])
+                if self.num_model== self.MOD_DENSE:
+                    new_state = new_state.reshape(1, self.env.shape[0] * self.env.shape[1])
+                elif self.num_model== self.MOD_CONV:
+                    new_state = new_state.reshape(1, self.env.shape[0] , self.env.shape[1],1)
+                else:
+                    raise ValueError("Model non défini !")
+
+
                 Q_future = max(self.target_model.predict(new_state)[0])
                 #print(f"Méthode remenber, target future= {Q_future}")
                 target[0][action] = reward + Q_future * self.gamma
@@ -141,4 +136,48 @@ class DQN:
     def save_model(self, fn):
         self.model.save(fn)
 
-    
+#---------------------------------------------------------------------------------------------
+
+    def create_model_20_100_100_1(self):
+        model = Sequential()
+        state_shape  = self.env.shape
+
+        model.add(Dense(20, input_dim=state_shape[0]*state_shape[1], activation='relu'))
+        model.add(Dense(100, activation='relu'))
+        model.add(Dense(100, activation='relu'))
+        model.add(Dense(state_shape[1], activation='linear'))
+
+        model.compile(loss="mean_squared_error", optimizer=Adam(lr=self.learning_rate))
+
+        return model
+
+
+    def create_model_sav(self):
+        model = Sequential()
+        state_shape  = self.env.shape
+
+        model.add(Dense(20, input_dim=state_shape[0]*state_shape[1], activation='relu'))
+        model.add(Dense(100, activation='relu'))
+        model.add(Dense(150, activation='relu'))
+        model.add(Dense(100, activation='relu'))
+        model.add(Dense(50, activation='relu'))
+        model.add(Dense(20, activation='relu'))
+        model.add(Dense(state_shape[1], activation='linear'))
+
+        model.compile(loss="mean_squared_error", optimizer=Adam(lr=self.learning_rate))
+
+        return model
+
+    def  create_model_qui_fonctionne(self):
+        model = Sequential()
+        state_shape  = self.env.shape
+
+        model.add(Dense(24, input_shape= state_shape, activation="relu")) # VOIR EVENTUELLEMENT SANS [0]
+        model.add(Dense(state_shape[0] * state_shape[1], input_shape= state_shape, activation="relu"))
+
+        model.add(Dense(7))
+
+        model.compile(loss="mean_squared_error", optimizer=Adam(lr=self.learning_rate))
+
+        return model
+

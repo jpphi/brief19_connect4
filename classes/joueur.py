@@ -140,12 +140,13 @@ class Jedi(Joueur):
     __recompense= 0
     __TYPE= "JEDI"
     
-    def __init__(self,  model= None, couleur=0, nom= ""):
+    def __init__(self,  model= None, num_model= 0, couleur=0, nom= ""):
         if couleur in self._couleur_dispo:
             self.__couleur= couleur
             self.__nom= f"{self.__nom}-{couleur}"
             self._couleur_dispo.remove(couleur)
             self.model= model
+            self.num_model= num_model
             print(f"__init__ de Jedi model= {self.model}")
             
         else:
@@ -172,19 +173,24 @@ class Jedi(Joueur):
     def jedi_joue(self,colonne_disponible, board, jeu, model= None):
         #print("model:",model)
         #cell_dispo= jeu.matrice_cellule_dispo(board)
-        b2= np.copy(board.reshape(1,board.shape[0] * board.shape[1]))
+
+        if self.num_model== 1:
+            b2= np.copy(board.reshape(1,board.shape[0] * board.shape[1]))
+        elif self.num_model== 2:
+            b2= np.copy(board.reshape(1,board.shape[0] * board.shape[1],1))
+            print(f"Jedi_joue aprés reshape. b2.shape: {b2.shape}.\nb2:\n{b2}")
+        else:
+            raise ValueError("Model non défini !")
+
+
         mat= model.predict(b2)[0]
-        #print(f"dans jedi joue mat= {mat} ")
-        #mat= mat * cell_dispo
-
-
 
         ########### CAS ETUDE SI PREDICT RENVOIE COL INDISPONIBLE RETRAIVAILLER CODE
         while True:
             col= (np.argmax(mat))
             if col+1 not in colonne_disponible:
                 mat[col]= -50
-                #print("ERREUR ! Dans jedi_joue, le board est plein, on n'aurais pas du arriver ici!")
+                print(f"Dans joueur-jedi_joue. Colonne prédite non disponible ! On retire l'élément de {mat}")
             else: break
 
                 

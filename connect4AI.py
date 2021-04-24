@@ -17,6 +17,8 @@ from entsort import *
 from game import *
 from DQN import *
 
+
+
 # Ligne de commande, utilisation de argparse
 parser = argparse.ArgumentParser(description='Power 4 !')
 parser = argparse.ArgumentParser()
@@ -34,7 +36,8 @@ parser.add_argument('--tournement_mode','-tm', action='store', type= int,  help=
 parser.add_argument('--modelplay1','-mp1', action='store', help='--modelplay1 path/file.h5')
 parser.add_argument('--modelplay2','-mp2', action='store', help='--modelplay2 path/file.h5')
 
-parser.add_argument('--num_model','-nm', action='store', help='--num_model N N est le numéro du modèle du reseau de neurone utilisé')
+parser.add_argument('--num_model1','-nm1', action='store', help='--num_model1 N N est le numéro du modèle du reseau de neurone utilisé')
+parser.add_argument('--num_model2','-nm2', action='store', help='--num_model2 N N est le numéro du modèle du reseau de neurone utilisé')
 
 """
 python connect4.py --help
@@ -54,8 +57,9 @@ if os.environ.get('DISPLAY','') == '':
     os.environ.__setitem__('DISPLAY', ':0.0')
 
 #----------------------------------------- Ligne de commande complète ---------------------------------------------------------------
-# python connect4AI.py -p1 "CodeR43" -p2 "CodeR43" -io "console" -b 6 7 4 -trm 200 -tm 0 -mp1 "./modeles/M20-100-100-1/model-20-100-100-1 200-CODER43 vs CODER43 79 79 42.h5" -mp2 "./modeles/M20-100-100-1/model-20-100-100-1 200-CODER43 vs CODER43 79 79 42.h5" -nm 1
+# python connect4AI.py -p1 "Jedi" -p2 "CodeR43" -io "console" -b 6 7 4 -trm 200 -tm 0 -mp1 "./model-20_100_150_100_50_20_1_m-col 100-JEDI43 vs CODER43 0 100 0.h5" -mp2 "./modeles/M20-100-100-1/model-20-100-100-1 200-CODER43 vs CODER43 79 79 42.h5" -nm1 1 -nm2 1
 #------------------------------------------------------------------------------------------------------------------------------------
+
 
 if __name__ == "__main__":
 
@@ -76,14 +80,19 @@ if __name__ == "__main__":
     if arguments.training_mode== None: arguments.training_mode= 0
     if arguments.tournement_mode== None: arguments.tournement_mode= 1
 
-    if arguments.num_model== None: arguments.num_model= 1
-
+    if arguments.num_model1== None: arguments.num_model1= 1
+    if arguments.num_model2== None: arguments.num_model2= 1
+    """
     game= Game(play1=  arguments.play1, play2= arguments.play2, inout= arguments.inout, board= (6,7,4),\
                 training_mode= arguments.training_mode, tournement_mode= arguments.tournement_mode, \
-                modelplay1= arguments.modelplay1, modelplay2= arguments.modelplay2)
-
-    # game= Game(play1= "Alea", play2= "Jedi", inout= "console", board= (6,7,4), training_mode= 0, tournement_mode= 20, \
-    #     modelplay1= "", modelplay2="./model42-24-7 50-CODER43 vs CODER43 17 20.h5")
+                modelplay1= arguments.modelplay1, modelplay2= arguments.modelplay2,\
+                num_model1= arguments.num_model1, num_model2= arguments.num_model2)
+    """
+    game= Game(play1= "Jedi", play2= "Alea", inout= "pygame", board= (6,7,4), \
+                training_mode= 5, tournement_mode= 0, \
+                modelplay1= "model-20_100_150_100_50_20_1_m-col 5-BOT vs BOT 3 2 0.h5", \
+                modelplay2="model-20_100_150_100_50_20_1_m-col 50-JEDI vs BOT 41 9 0.h5",\
+                num_model1= 2, num_model2= 2)
 
     if game.training_mode(): game.apprentissage()
     if game.tournement_mode(): game.tournoi()

@@ -15,16 +15,21 @@ from entsort import *
 
 class Game():
 
-    def __init__(self, play1= "Humain", play2= "Humain", inout= "Console", board= (6,7,4), training_mode= 0, tournement_mode= 1, \
-                 modelplay1= None, modelplay2= None):
-        self.__joueur1= self.__initjoueur(type_joueur= play1, couleur= 1, modelplay= modelplay1)
-        self.__joueur2= self.__initjoueur(type_joueur= play2, couleur= -1, modelplay= modelplay2)
+    def __init__(self, play1= "Humain", play2= "Humain", inout= "Console", board= (6,7,4), \
+                    training_mode= 0, tournement_mode= 1, \
+                    modelplay1= None, modelplay2= None, num_model1= 1, num_model2= 1):
+        self.__joueur1= self.__initjoueur(type_joueur= play1, couleur= 1, modelplay= modelplay1,\
+                                            num_model= num_model1)
+        self.__joueur2= self.__initjoueur(type_joueur= play2, couleur= -1, modelplay= modelplay2,\
+                                            num_model= num_model2)
         self.__jeu= Plateau(hauteur= board[0], largeur= board[1], a_la_suite= board[2])
         self.__es= self.__inites(type_es= inout)
         self.__training_mode= training_mode
         self.__tournement_mode= tournement_mode
         self.__model1= modelplay1
         self.__model2= modelplay2
+        self.__num_model1= num_model1
+        self.__num_model2= num_model2
 
     def training_mode(self):
         return self.__training_mode
@@ -33,7 +38,7 @@ class Game():
         return self.__tournement_mode
 
 
-    def __initjoueur(self, type_joueur= "", couleur= 0, modelplay= None):
+    def __initjoueur(self, type_joueur= "", couleur= 0, modelplay= None, num_model= 0):
         if type_joueur== "Humain":
             joueur= Humain(couleur)
             return joueur
@@ -55,7 +60,7 @@ class Game():
             print(f"Jedi : couleur : {couleur} matrice h5 : \n{modelplay}")
             model1= load_model(modelplay)
             
-            joueur= Jedi(model= model1, couleur= couleur)
+            joueur= Jedi(model= model1, num_model= num_model,couleur= couleur)
 
             return joueur
 
@@ -97,10 +102,18 @@ class Game():
         cpt_partie_nulle= 0  
         j1= 0
         j2= 0
+
+
+
         # DQN
-        dqn_agent= DQN(self.__jeu.get_board(), num_model= num_model)
+        dqn_agent= DQN(self.__jeu.get_board(),num_model= 1, loadmodel="")
+        #dqn_agent= dqn.create_model(num_model= 1, load_model="")
         #dqn_agent= load_model("./model-20_100_150_100_50_20_1_m-col 200-CODER43 vs CODER43 70 85 45.h5") #DQN(self.__jeu.get_board(), num_model= num_model)
         #dqn_agent= model.compile(loss="mean_squared_error", optimizer=Adam(lr=0.005))
+
+
+
+
 
         #print("shape du board:",jeu.get_board().shape)
         i_sav_iteration= 1
@@ -165,11 +178,13 @@ class Game():
                 print("Joueur 2. Fin jeu plein ?")
             if i_sav_iteration % 25== 0: dqn_agent.save_model(f"modelprov {i_sav_iteration}.h5")
             i_sav_iteration+= 1
+            print(f"j1= {j1} / j2= {j2}")
 
                 # train the player
         print(f"Sauvegarde de l'agent. Nombre de partie nulle: {cpt_partie_nulle}")
-        dqn_agent.save_model(f"model-20_100_150_100_50_20_1_m-col {self.__training_mode}-{self.__joueur1.get_type()}43 "+\
-            f"vs {self.__joueur2.get_type()}43 {j1} {j2} {cpt_partie_nulle}.h5")
+        dqn_agent.save_model(f"model-type{self.__num_model1} et {self.__num_model2} "+\
+            f"{self.__training_mode}-{self.__joueur1.get_type()} "+\
+            f"vs {self.__joueur2.get_type()} {j1} {j2} {cpt_partie_nulle}.h5")
         
 
 
