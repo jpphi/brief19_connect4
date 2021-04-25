@@ -3,10 +3,10 @@ import tensorflow as tf
 import keras
 import numpy as np
 
-from tensorflow.keras.models import Sequential,  Model
+from tensorflow.keras.models import Sequential, load_model # Model
 
 #from keras.layers import Dense, Dropout, Flatten, Conv2D, Input, MaxPooling2D, Reshape, BatchNormalization
-from tensorflow.keras.layers import Dense
+from tensorflow.keras.layers import Dense, Flatten, Conv2D, MaxPooling2D
 from tensorflow.keras.optimizers import Adam
 
 from collections import deque
@@ -29,13 +29,9 @@ class DQN:
         self.learning_rate = 0.005
         self.tau = .125
 
-
-
         self.model        = self.create_model(num_model, loadmodel)
         self.target_model = self.create_model(num_model, loadmodel)
         self.num_model= num_model
-
-
 
     def create_model(self, numero, loadmodel):
         model = Sequential()
@@ -68,7 +64,9 @@ class DQN:
             model.compile(loss="mean_squared_error", optimizer=Adam(lr=self.learning_rate))
 
         elif loadmodel!= "":
-            pass
+            # https://machinelearningmastery.com/save-load-keras-deep-learning-models/
+            model= load_model(loadmodel)
+
 
         return model
 

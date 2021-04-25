@@ -2,7 +2,7 @@ import sys
 import numpy as np
 import time
 
-from keras.models import load_model, save_model
+from tensorflow.keras.models import load_model, save_model
 from tensorflow.keras.optimizers import Adam
 
 sys.path.append("./classes")
@@ -17,19 +17,21 @@ class Game():
 
     def __init__(self, play1= "Humain", play2= "Humain", inout= "Console", board= (6,7,4), \
                     training_mode= 0, tournement_mode= 1, \
-                    modelplay1= None, modelplay2= None, num_model1= 1, num_model2= 1):
+                    modelplay1= None, modelplay2= None, loadmodel= None, num_model= 1): #num_model1= 1, num_model2= 1):
         self.__joueur1= self.__initjoueur(type_joueur= play1, couleur= 1, modelplay= modelplay1,\
-                                            num_model= num_model1)
+                                            num_model= num_model)
         self.__joueur2= self.__initjoueur(type_joueur= play2, couleur= -1, modelplay= modelplay2,\
-                                            num_model= num_model2)
+                                            num_model= num_model)
         self.__jeu= Plateau(hauteur= board[0], largeur= board[1], a_la_suite= board[2])
         self.__es= self.__inites(type_es= inout)
         self.__training_mode= training_mode
         self.__tournement_mode= tournement_mode
         self.__model1= modelplay1
         self.__model2= modelplay2
-        self.__num_model1= num_model1
-        self.__num_model2= num_model2
+        self.__loadmodel= loadmodel
+        #self.__num_model1= num_model1
+        #self.__num_model2= num_model2
+        self.__num_model= num_model
 
     def training_mode(self):
         return self.__training_mode
@@ -106,7 +108,7 @@ class Game():
 
 
         # DQN
-        dqn_agent= DQN(self.__jeu.get_board(),num_model= 1, loadmodel="")
+        dqn_agent= DQN(self.__jeu.get_board(),num_model= self.__num_model, loadmodel= self.__loadmodel)
         #dqn_agent= dqn.create_model(num_model= 1, load_model="")
         #dqn_agent= load_model("./model-20_100_150_100_50_20_1_m-col 200-CODER43 vs CODER43 70 85 45.h5") #DQN(self.__jeu.get_board(), num_model= num_model)
         #dqn_agent= model.compile(loss="mean_squared_error", optimizer=Adam(lr=0.005))
@@ -117,6 +119,7 @@ class Game():
 
         #print("shape du board:",jeu.get_board().shape)
         i_sav_iteration= 1
+        j1=j2= 0
         for game in range(self.__training_mode):
             #es= console()
 

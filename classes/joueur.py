@@ -174,26 +174,32 @@ class Jedi(Joueur):
         #print("model:",model)
         #cell_dispo= jeu.matrice_cellule_dispo(board)
 
+        b2= np.copy(board)
+
         if self.num_model== 1:
-            b2= np.copy(board.reshape(1,board.shape[0] * board.shape[1]))
+            b2= b2.reshape(1,board.shape[0] * board.shape[1])
+            mat= model.predict(b2)[0]
+            print(f"Jedi_joue aprés reshape, num_model 1. b2.shape: {b2.shape}.\nb2:\n{b2}")
         elif self.num_model== 2:
-            b2= np.copy(board.reshape(1,board.shape[0] * board.shape[1],1))
-            print(f"Jedi_joue aprés reshape. b2.shape: {b2.shape}.\nb2:\n{b2}")
+            b2= b2.reshape(1,board.shape[0] * board.shape[1],1)
+            print(f"Jedi_joue avant model.predict, num_model 2. b2.shape: {b2.shape}.\nb2:\n{b2}")
+            mat= model.predict(b2)[0]
+            print(f"Jedi_joue aprés model.predict, num_model 2. b2.shape: {b2.shape}.\nb2:\n{b2}")
         else:
             raise ValueError("Model non défini !")
 
-
-        mat= model.predict(b2)[0]
-
-        ########### CAS ETUDE SI PREDICT RENVOIE COL INDISPONIBLE RETRAIVAILLER CODE
-        while True:
+        while True: # Vérifions que col est disponible avant de retourner sa valeur
             col= (np.argmax(mat))
             if col+1 not in colonne_disponible:
-                mat[col]= -50
-                print(f"Dans joueur-jedi_joue. Colonne prédite non disponible ! On retire l'élément de {mat}")
+                #mat[col]= -50
+                print(f"Dans joueur-jedi_joue. Colonne prédite= {col+1} non disponible !"+\
+                    f" On retire l'élément de {mat}")
+                mat= np.delete(mat,[col])
+                print(f"Aprés retrait: mat= {mat}")
+                if len(mat)== 0: # Plus de colonne disponible. Cela ne devrait pas arriver ici!
+                    raise ValueError("Dans classe joueur, méthode jedi_joue: Plus de colonne disponible !"\
+                        " Ceci ne devrait pas se produire ici car la détection 'plateau plein' se fait en amont.")
             else: break
-
-                
 
         print(f"dans jedi joue col: {col}")
         #col = int(input("colonne: "))
