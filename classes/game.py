@@ -17,7 +17,8 @@ class Game():
 
     def __init__(self, play1= "Humain", play2= "Humain", inout= "Console", board= (6,7,4), \
                     training_mode= 0, tournement_mode= 1, \
-                    modelplay1= None, modelplay2= None, loadmodel= None, num_model= 1): #num_model1= 1, num_model2= 1):
+                    modelplay1= None, modelplay2= None, loadmodel= None, \
+                    num_model= 1, num_model1= 1, num_model2= 1):
         self.__joueur1= self.__initjoueur(type_joueur= play1, couleur= 1, modelplay= modelplay1,\
                                             num_model= num_model)
         self.__joueur2= self.__initjoueur(type_joueur= play2, couleur= -1, modelplay= modelplay2,\
@@ -29,8 +30,8 @@ class Game():
         self.__model1= modelplay1
         self.__model2= modelplay2
         self.__loadmodel= loadmodel
-        #self.__num_model1= num_model1
-        #self.__num_model2= num_model2
+        self.__num_model1= num_model1
+        self.__num_model2= num_model2
         self.__num_model= num_model
 
     def training_mode(self):

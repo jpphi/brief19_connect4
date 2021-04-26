@@ -37,8 +37,8 @@ parser.add_argument('--modelplay1','-mp1', action='store', help='--modelplay1 pa
 parser.add_argument('--modelplay2','-mp2', action='store', help='--modelplay2 path/file.h5')
 parser.add_argument('--loadmodel','-lm', action='store', help='--loadmodel path/file.h5')
 
-#parser.add_argument('--num_model1','-nm1', action='store', help='--num_model1 N N est le numéro du modèle du reseau de neurone utilisé')
-#parser.add_argument('--num_model2','-nm2', action='store', help='--num_model2 N N est le numéro du modèle du reseau de neurone utilisé')
+parser.add_argument('--num_model1','-nm1', action='store', help='--num_model1 N N est le numéro du modèle du reseau de neurone utilisé')
+parser.add_argument('--num_model2','-nm2', action='store', help='--num_model2 N N est le numéro du modèle du reseau de neurone utilisé')
 parser.add_argument('--num_model','-nm', action='store', help='--num_model N N est le numéro du modèle du reseau de neurone utilisé')
 
 """
@@ -82,8 +82,8 @@ if __name__ == "__main__":
     if arguments.training_mode== None: arguments.training_mode= 0
     if arguments.tournement_mode== None: arguments.tournement_mode= 1
 
-    #if arguments.num_model1== None: arguments.num_model1= 1 # A VIRER ??????????????
-    #if arguments.num_model2== None: arguments.num_model2= 1 # A VIRER ??????????????
+    if arguments.num_model1== None: arguments.num_model1= 1
+    if arguments.num_model2== None: arguments.num_model2= 1
     if arguments.num_model== None: arguments.num_model= 1
 
     # POUR LANCER EN LIGNE DE COMMANDE, DÉCOMMENTER CETTE LIGNE ET COMMENTER LA SUIVANTE
@@ -91,14 +91,15 @@ if __name__ == "__main__":
     game= Game(play1=  arguments.play1, play2= arguments.play2, inout= arguments.inout, board= (6,7,4),\
                 training_mode= arguments.training_mode, tournement_mode= arguments.tournement_mode, \
                 modelplay1= arguments.modelplay1, modelplay2= arguments.modelplay2,\
-                num_model1= arguments.num_model1, num_model2= arguments.num_model2)
+                num_model1= arguments.num_model1, num_model2= arguments.num_model2,\
+                num_model= arguments.num_model)
     """
-    game= Game(play1= "CodeR4", play2= "CodeR4", inout= "pygame", board= (6,7,4), \
-                training_mode= 100, tournement_mode= 0, \
-                modelplay1= "model-type1 et 2 100-JEDI vs CODER 0 100 0.h5", \
+    game= Game(play1= "CodeR43", play2= "CodeR43", inout= "pygame", board= (6,7,4), \
+                training_mode= 100, tournement_mode= 50, \
+                modelplay1= "model-type1 et 1 200-CODER vs CODER 131 55 14.h5", \
                 modelplay2="model-type1 et 1 200-JEDI vs CODER 0 200 0.h5",\
-                loadmodel= "model-type1 et 2 2-CODER vs CODER 2 0 0.h5",\
-                num_model= 1) #num_model1= 0, num_model2= 0)
+                loadmodel= "model-type1 et 1 200-CODER vs CODER 131 55 14.h5",\
+                num_model= 1, num_model1= 1, num_model2= 1)
 
     if game.training_mode(): game.apprentissage()
     if game.tournement_mode(): game.tournoi()
