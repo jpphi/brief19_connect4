@@ -86,6 +86,16 @@ if __name__ == "__main__":
     if arguments.num_model2== None: arguments.num_model2= 1
     if arguments.num_model== None: arguments.num_model= 1
 
+    #------------------------- A FAIRE --------------------------------------
+    #
+    # FAIRE UNE METHODE ENREGISTREMENT PARTIE Pour utiliser les partie h/h en apprentissage ensuite
+    # + methode rejouer partie
+    # Integrer tkinter
+    # faire des docstring
+    # Bug chargement jedi en reseau convolutionnel
+    #
+    #------------------------------------------------------------------------
+    
     # POUR LANCER EN LIGNE DE COMMANDE, DÉCOMMENTER CETTE LIGNE ET COMMENTER LA SUIVANTE
     """
     game= Game(play1=  arguments.play1, play2= arguments.play2, inout= arguments.inout, board= (6,7,4),\
@@ -94,11 +104,11 @@ if __name__ == "__main__":
                 num_model1= arguments.num_model1, num_model2= arguments.num_model2,\
                 num_model= arguments.num_model)
     """
-    game= Game(play1= "CodeR43", play2= "CodeR43", inout= "pygame", board= (6,7,4), \
-                training_mode= 100, tournement_mode= 50, \
-                modelplay1= "model-type1 et 1 200-CODER vs CODER 131 55 14.h5", \
-                modelplay2="model-type1 et 1 200-JEDI vs CODER 0 200 0.h5",\
-                loadmodel= "model-type1 et 1 200-CODER vs CODER 131 55 14.h5",\
+    game= Game(play1= "Jedi", play2= "CodeR4", inout= "pygame", board= (6,7,4), \
+                training_mode= 110, tournement_mode= 0, \
+                modelplay1= "model-type1 et 1 100-JEDI vs CODER 0 100 0.h5", \
+                modelplay2="model-type1 et 1 10-JEDI vs HUMAIN 0 10 0.h5",\
+                loadmodel= "model-type1 et 1 100-JEDI vs CODER 0 100 0.h5",\
                 num_model= 1, num_model1= 1, num_model2= 1)
 
     if game.training_mode(): game.apprentissage()

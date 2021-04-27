@@ -187,18 +187,21 @@ class Jedi(Joueur):
             print(f"Jedi_joue aprés model.predict, num_model 2. b2.shape: {b2.shape}.\nb2:\n{b2}")
         else:
             raise ValueError("Model non défini !")
-
+        iteration= 0
         while True: # Vérifions que col est disponible avant de retourner sa valeur
             col= (np.argmax(mat))
+            mini= mat.min()
+            #print(f"Méthode jedijoue apres np.argmax: col= {col}")
             if col+1 not in colonne_disponible:
-                #mat[col]= -50
-                print(f"Dans joueur-jedi_joue. Colonne prédite= {col+1} non disponible !"+\
-                    f" On retire l'élément de {mat}")
-                mat= np.delete(mat,[col])
-                print(f"Aprés retrait: mat= {mat}")
-                if len(mat)== 0: # Plus de colonne disponible. Cela ne devrait pas arriver ici!
+                mat[col]= mini - 1 # la colonne n'est pas disponible, on l'a "disqualifie"
+                #print(f"Dans joueur-jedi_joue. Colonne prédite= {col+1} non disponible !"+\
+                #    f" On retire l'élément de {mat}.\nLes colonnes disponible sont: {colonne_disponible}")
+                #mat= np.delete(mat,[col])
+                #print(f"Aprés retrait: mat= {mat}")
+                if iteration> board.shape[1]: # Plus de colonne disponible. Cela ne devrait pas arriver ici!
                     raise ValueError("Dans classe joueur, méthode jedi_joue: Plus de colonne disponible !"\
                         " Ceci ne devrait pas se produire ici car la détection 'plateau plein' se fait en amont.")
+                iteration+= 1
             else: break
 
         print(f"dans jedi joue col: {col}")

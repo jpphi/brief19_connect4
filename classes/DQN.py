@@ -65,6 +65,7 @@ class DQN:
 
         elif loadmodel!= "":
             # https://machinelearningmastery.com/save-load-keras-deep-learning-models/
+            print(f"Chargment du model {loadmodel}")
             model= load_model(loadmodel)
 
 
