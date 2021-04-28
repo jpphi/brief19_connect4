@@ -6,7 +6,7 @@ import numpy as np
 from tensorflow.keras.models import Sequential, load_model # Model
 
 #from keras.layers import Dense, Dropout, Flatten, Conv2D, Input, MaxPooling2D, Reshape, BatchNormalization
-from tensorflow.keras.layers import Dense, Flatten, Conv2D, MaxPooling2D
+from tensorflow.keras.layers import Dense, Flatten, Conv2D, MaxPooling2D, LSTM
 from tensorflow.keras.optimizers import Adam
 
 from collections import deque
@@ -16,11 +16,12 @@ from tensorflow.python.keras.layers.preprocessing.category_encoding import _NUM_
 class DQN:
     MOD_CONV= 2 # Modele réseau de neuronne convolutionnel
     MOD_DENSE= 1 # Modele réseau de neuronne dense
+    MOD_LSTM= 3 # Modele réseau de neuronne dense
     LOAD_MODEL= ""
 
     def __init__(self, env, num_model= MOD_DENSE, loadmodel= LOAD_MODEL):
         self.env     = env
-        self.memory  = deque(maxlen=2000) # initialement à 2000
+        self.memory  = deque(maxlen=10000) # initialement à 2000
         
         self.gamma = 0.85
         self.epsilon = 1.0
@@ -62,6 +63,29 @@ class DQN:
             model.add(Dense(state_shape[1], activation='linear'))
 
             model.compile(loss="mean_squared_error", optimizer=Adam(lr=self.learning_rate))
+
+        elif numero== self.MOD_LSTM and loadmodel== "":
+
+            regressor = Sequential()
+
+            regressor.add(LSTM(units = 75, return_sequences = True, input_shape = (state_shape[1], 1)))
+            regressor.add(Dropout(0.1))
+
+            regressor.add(LSTM(units = 50, return_sequences = True))
+            regressor.add(Dropout(0.2))
+
+            regressor.add(LSTM(units = 50, return_sequences = True))
+            regressor.add(Dropout(0.1))
+
+            regressor.add(LSTM(units = 75))
+            regressor.add(Dropout(0.2))
+
+            regressor.add(Dense(units = state_shape[1]))
+
+            regressor.compile(optimizer = 'adam', loss = 'mean_squared_error')
+
+
+
 
         elif loadmodel!= "":
             # https://machinelearningmastery.com/save-load-keras-deep-learning-models/
@@ -116,7 +140,6 @@ class DQN:
                     new_state = new_state.reshape(1, self.env.shape[0] , self.env.shape[1],1)
                 else:
                     raise ValueError("Model non défini !")
-
 
                 Q_future = max(self.target_model.predict(new_state)[0])
                 #print(f"Méthode remenber, target future= {Q_future}")

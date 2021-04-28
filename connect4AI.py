@@ -1,5 +1,3 @@
-# Plateau
-#from  import Alea
 import numpy as np
 import pygame
 import sys
@@ -93,6 +91,7 @@ if __name__ == "__main__":
     # Integrer tkinter
     # faire des docstring
     # Bug chargement jedi en reseau convolutionnel
+    # Utiliser act qui donnerai un peu d aleatoire dans le comportement de jedi
     #
     #------------------------------------------------------------------------
     
@@ -104,12 +103,12 @@ if __name__ == "__main__":
                 num_model1= arguments.num_model1, num_model2= arguments.num_model2,\
                 num_model= arguments.num_model)
     """
-    game= Game(play1= "Jedi", play2= "CodeR4", inout= "pygame", board= (6,7,4), \
-                training_mode= 110, tournement_mode= 0, \
-                modelplay1= "model-type1 et 1 100-JEDI vs CODER 0 100 0.h5", \
-                modelplay2="model-type1 et 1 10-JEDI vs HUMAIN 0 10 0.h5",\
-                loadmodel= "model-type1 et 1 100-JEDI vs CODER 0 100 0.h5",\
-                num_model= 1, num_model1= 1, num_model2= 1)
+    game= Game(play1= "Alea", play2= "Alea", inout= "console", board= (6,7,4), \
+                training_mode= 0, tournement_mode= 1, \
+                modelplay1= "model-type2 et 2 255-JEDI vs CODER 25 230 0.h5", \
+                modelplay2="model-type2 et 2 255-JEDI vs CODER 25 230 0.h5",\
+                loadmodel= "model-type2 et 2 255-JEDI vs CODER 25 230 0.h5",\
+                num_model= 1, num_model1= 1, num_model2= 1, param= {"tau":1, "epsilon":2})
 
     if game.training_mode(): game.apprentissage()
     if game.tournement_mode(): game.tournoi()
