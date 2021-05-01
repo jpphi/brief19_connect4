@@ -21,6 +21,10 @@ from DQN import *
 parser = argparse.ArgumentParser(description='Power 4 !')
 parser = argparse.ArgumentParser()
 parser.version = '1.0'
+
+#---------------------
+#parser.add_argument('--reg-rate', type=float, dest='reg_rate', default=0.01) # Essayer dest pour alléger le code
+
 parser.add_argument('--play1','-p1', action='store', help='--play1 "Humain" or "CodeR4" or "CodeR43" or "Jedi" or nothing (=Humain)')
 parser.add_argument('--play2','-p2', action='store', help='--play2 "Humain" or "CodeR4" or "CodeR43" or "Jedi" or nothing (=Humain)')
 
@@ -103,12 +107,12 @@ if __name__ == "__main__":
                 num_model1= arguments.num_model1, num_model2= arguments.num_model2,\
                 num_model= arguments.num_model)
     """
-    game= Game(play1= "Alea", play2= "Alea", inout= "console", board= (6,7,4), \
-                training_mode= 0, tournement_mode= 1, \
-                modelplay1= "model-type2 et 2 255-JEDI vs CODER 25 230 0.h5", \
-                modelplay2="model-type2 et 2 255-JEDI vs CODER 25 230 0.h5",\
-                loadmodel= "model-type2 et 2 255-JEDI vs CODER 25 230 0.h5",\
-                num_model= 1, num_model1= 1, num_model2= 1, param= {"tau":1, "epsilon":2})
+    game= Game(play1= "Jedi", play2= "Alea", inout= "pygame", board= (6,7,4), \
+                training_mode= 2, tournement_mode= 0, \
+                modelplay1= "model-conv.h5", \
+                modelplay2="model-type1 et 1 200-JEDI vs JEDI 200 0 0.h5",\
+                loadmodel= "",\
+                num_model= 2, num_model1= 2, num_model2= 1, param= {"tau":1, "epsilon":2})
 
     if game.training_mode(): game.apprentissage()
     if game.tournement_mode(): game.tournoi()

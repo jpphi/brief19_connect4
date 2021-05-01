@@ -35,13 +35,13 @@ class Humain(Joueur):
     __nom= "Humain"
     __recompense= 0
     __TYPE= "HUMAIN"
-    __victoire= 0
     
     def __init__(self, couleur= 0, nom= ""):
         if couleur in self._couleur_dispo:
             self.__couleur= couleur
             self.__nom= f"{self.__nom}-{couleur}"
             self._couleur_dispo.remove(couleur)
+            self.__victoire= 0
             #print(self._couleur_dispo)
             
         else:
@@ -76,13 +76,13 @@ class Alea(Joueur):
     __nom= "Alea jacta est"
     __recompense= 0
     __TYPE= "BOT"
-    __victoire= 0
     
     def __init__(self, couleur= 0, nom= ""):
         if couleur in self._couleur_dispo:
             self.__couleur= couleur
             self.__nom= f"{self.__nom}-{couleur}"
             self._couleur_dispo.remove(couleur)
+            self.__victoire= 0
             #print(self._couleur_dispo)
             
         else:
@@ -120,13 +120,13 @@ class Padawan(Joueur):
     __nom= "Anakin"
     __recompense= 0
     __TYPE= "PADAWAN"
-    __victoire= 0
     
     def __init__(self, model, couleur= 0, nom= ""):
         if couleur in self._couleur_dispo:
             self.__couleur= couleur
             self.__nom= f"{self.__nom}-{couleur}"
             self._couleur_dispo.remove(couleur)
+            self.__victoire= 0
             print(self._couleur_dispo)
             
         else:
@@ -165,16 +165,18 @@ class Jedi(Joueur):
     __nom= "Obiwan"
     __recompense= 0
     __TYPE= "JEDI"
-    __victoire= 0
     
     def __init__(self,  model= None, num_model= 0, couleur=0, nom= ""):
+        print(f"\n1er ligne de __init__ de Jedi model= {model}\n"+\
+            f"num_model={num_model} couleur= {couleur}")
         if couleur in self._couleur_dispo:
             self.__couleur= couleur
             self.__nom= f"{self.__nom}-{couleur}"
             self._couleur_dispo.remove(couleur)
             self.model= model
             self.num_model= num_model
-            print(f"__init__ de Jedi model= {self.model}")
+            self.__victoire= 0
+            print(f"\n__init__ de Jedi model= {self.model}\n")
             
         else:
             print(f"La couleur doit appartenir à la liste {self._couleur_dispo}.")
@@ -215,7 +217,7 @@ class Jedi(Joueur):
             mat= model.predict(b2)[0]
             print(f"Jedi_joue aprés reshape, num_model 1. b2.shape: {b2.shape}.\nb2:\n{b2}")
         elif self.num_model== 2:
-            b2= b2.reshape(1,board.shape[0] * board.shape[1],1)
+            b2= b2.reshape(1,board.shape[0],board.shape[1],1)
             print(f"Jedi_joue avant model.predict, num_model 2. b2.shape: {b2.shape}.\nb2:\n{b2}"+\
                 f"\nmodel: {model}")
             mat= model.predict(b2)[0]
@@ -253,7 +255,6 @@ class CodeR(Joueur):
     __nom= "Attaque_défence"
     __recompense= 0
     __TYPE= "CODER"
-    __victoire= 0
 
     def __init__(self, couleur=0, nom= "", niveau= 4):
         if couleur in self._couleur_dispo:
@@ -261,6 +262,7 @@ class CodeR(Joueur):
             self.__nom= f"{self.__nom}-{couleur}"
             self._couleur_dispo.remove(couleur)
             self.__niveau= niveau
+            self.__victoire= 0
             print(f"Dans __init__ niveau= {self.__niveau}")
             
         else:
@@ -282,6 +284,13 @@ class CodeR(Joueur):
         
     def get_recompense(self):
         return self.__recompense
+
+    def get_victoire(self):
+        return self.__victoire
+
+    def inc_victoire(self):
+        self.__victoire+= 1
+        return self.__victoire
 
     # Méthode spécifique à la classe bot
 
