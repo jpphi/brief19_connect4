@@ -207,7 +207,7 @@ class Jedi(Joueur):
     # Méthode spécifique à la classe Jedi
 
     def jedi_joue(self,colonne_disponible, board, jeu, model= None):
-        #print("model:",model)
+        print(f"jedi_joue: model: {model}, num_model: {self.num_model} couleur: {self.__couleur}")
         #cell_dispo= jeu.matrice_cellule_dispo(board)
 
         b2= np.copy(board)
@@ -215,11 +215,11 @@ class Jedi(Joueur):
         if self.num_model== 1:
             b2= b2.reshape(1,board.shape[0] * board.shape[1])
             mat= model.predict(b2)[0]
-            print(f"Jedi_joue aprés reshape, num_model 1. b2.shape: {b2.shape}.\nb2:\n{b2}")
+            #print(f"Jedi_joue aprés reshape, num_model 1. b2.shape: {b2.shape}.\nb2:\n{b2}")
         elif self.num_model== 2:
             b2= b2.reshape(1,board.shape[0],board.shape[1],1)
-            print(f"Jedi_joue avant model.predict, num_model 2. b2.shape: {b2.shape}.\nb2:\n{b2}"+\
-                f"\nmodel: {model}")
+            #print(f"Jedi_joue avant model.predict, num_model 2. b2.shape: {b2.shape}.\nb2:\n{b2}"+\
+            #    f"\nmodel: {model}")
             mat= model.predict(b2)[0]
             print(f"Jedi_joue aprés model.predict, num_model 2. b2.shape: {b2.shape}.\nb2:\n{b2}")
         else:
@@ -248,6 +248,9 @@ class Jedi(Joueur):
 
     def get_model(self):
         return self.model
+
+    def get_num_model(self):
+        return self.num_model
 
 
 class CodeR(Joueur):
@@ -434,6 +437,3 @@ class CodeR(Joueur):
             return True
 
         return False
-
-
-

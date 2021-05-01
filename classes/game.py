@@ -20,10 +20,10 @@ class Game():
                     modelplay1= None, modelplay2= None, loadmodel= None, \
                     num_model= 1, num_model1= 1, num_model2= 1,
                     param= {}):
-        self.__joueur2= self.__initjoueur(type_joueur= play2, couleur= -1, modelplay= modelplay2,\
-                                            num_model= num_model2)
         self.__joueur1= self.__initjoueur(type_joueur= play1, couleur= 1, modelplay= modelplay1,\
                                             num_model= num_model1)
+        self.__joueur2= self.__initjoueur(type_joueur= play2, couleur= -1, modelplay= modelplay2,\
+                                            num_model= num_model2)
         self.__jeu= Plateau(hauteur= board[0], largeur= board[1], a_la_suite= board[2])
         self.__es= self.__inites(type_es= inout)
         self.__training_mode= training_mode
@@ -65,11 +65,10 @@ class Game():
             return joueur
 
         if type_joueur== "Jedi":
-            print(f"Jedi : couleur : {couleur} matrice h5 : \n{modelplay}"+\
-                f" num_model= {num_model} couleur= {couleur}")
-            mod= load_model(modelplay)
+            print(f"Jedi : couleur : {couleur} matrice h5 : \n{modelplay}")
+            model1= load_model(modelplay)
             
-            joueur= Jedi(model= mod, num_model= num_model, couleur= couleur)
+            joueur= Jedi(model= model1, num_model= num_model,couleur= couleur)
 
             return joueur
 
@@ -166,9 +165,10 @@ class Game():
             print(f"Récompence joueur 1: {self.__joueur1.get_recompense()}. Nb victoire: {self.__joueur1.get_victoire()}")
             print(f"Récompence joueur 2: {self.__joueur2.get_recompense()}. Nb victoire: {self.__joueur2.get_victoire()}")
             print(f"Nombre de parties nulle: {cpt_partie_nulle}")
-
+            
             if i_sav_iteration % 25== 0: dqn_agent.save_model(f"modelprov{self.__num_model} {i_sav_iteration}.h5")
             i_sav_iteration+= 1
+
 
 
         print(f"Sauvegarde de l'agent. Nombre de partie nulle: {cpt_partie_nulle}")
@@ -216,8 +216,9 @@ class Game():
             print(f"Récompence joueur 1: {self.__joueur1.get_recompense()}. Nb victoire: {self.__joueur1.get_victoire()}")
             print(f"Récompence joueur 2: {self.__joueur2.get_recompense()}. Nb victoire: {self.__joueur2.get_victoire()}")
             print(f"Nombre de parties nulle: {cpt_partie_nulle}")
-            
+
             self.__es.aff_matrice(self.__jeu.get_board())
+
             time.sleep(1) # 1 seconde entre partie du tournoi pour lecture des infos
 
 

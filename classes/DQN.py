@@ -53,16 +53,34 @@ class DQN:
 
 
         elif numero== self.MOD_CONV and loadmodel== "":
+            optimizer= Adam(lr=self.learning_rate)
+            num_filters1= 16
+            num_filters2= 32
+            num_filters3= 64
+            kernel_size1= (1,1)
+            kernel_size2= (3,3)
+            kernel_size3= (3,3)
+            pool1= (2,2)
+            pool2= (2,2)
+            pool3= (2,2)
 
-            model.add(Conv2D(16,3,padding="same", input_shape=(state_shape[0],state_shape[1],1), activation='relu'))
-            model.add(MaxPooling2D(pool_size=(4,4),padding="same"))
+            model.add(Conv2D(filters= num_filters1, kernel_size= kernel_size1 ,padding="same", input_shape=(state_shape[0],state_shape[1],1), activation='relu'))
+            model.add(MaxPooling2D(pool_size= pool1,padding="same"))
+
+            model.add(Conv2D(filters= num_filters2, kernel_size= kernel_size2 ,padding="same", input_shape=(state_shape[0],state_shape[1],1), activation='relu'))
+            model.add(MaxPooling2D(pool_size= pool2,padding="same"))
+
+            model.add(Conv2D(filters= num_filters3, kernel_size= kernel_size3 ,padding="same", input_shape=(state_shape[0],state_shape[1],1), activation='relu'))
+            model.add(MaxPooling2D(pool_size= pool3,padding="same"))
+
+
             model.add(Flatten())
-            model.add(Dense(50, activation='relu'))
-            model.add(Dense(50, activation='relu'))
+            model.add(Dense(250, activation='relu'))
+            model.add(Dense(150, activation='relu'))
             model.add(Dense(50, activation='relu'))
             model.add(Dense(state_shape[1], activation='linear'))
 
-            model.compile(loss="mean_squared_error", optimizer=Adam(lr=self.learning_rate))
+            model.compile(loss="mean_squared_error", optimizer= optimizer)
 
         elif numero== self.MOD_LSTM and loadmodel== "":
 
@@ -158,7 +176,7 @@ class DQN:
     def save_model(self, fn):
         self.model.save(fn)
 
-#---------------------------------------------------------------------------------------------
+#---------------------------------- Bouts de codes --------------------------------------------
 
     def create_model_20_100_100_1(self):
         model = Sequential()
