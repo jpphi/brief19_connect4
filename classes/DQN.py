@@ -23,13 +23,13 @@ class DQN:
         self.env     = env
         self.memory  = deque(maxlen=10000) # initialement à 2000
         
-        self.gamma = 0.85
+        self.gamma = 0.95 #0.85
         self.epsilon = 1.0
-        self.epsilon_min = 0.01
+        self.epsilon_min = 0.1 #0.01
         self.epsilon_decay = 0.995
-        self.learning_rate = 0.005
-        self.tau = .125
-
+        self.learning_rate = 0.001 #0.005
+        self.tau = 0.01 #.125
+        
         self.model        = self.create_model(num_model, loadmodel)
         self.target_model = self.create_model(num_model, loadmodel)
         self.num_model= num_model

@@ -108,10 +108,10 @@ if __name__ == "__main__":
                 num_model= arguments.num_model)
     """
     game= Game(play1= "Jedi", play2= "Jedi", inout= "pygame", board= (6,7,4), \
-                training_mode= 0, tournement_mode= 10, \
-                modelplay1= "model-type1 et 1 300-JEDI vs CODER 6 294 0.h5", \
-                modelplay2="modelprov2 225.h5",\
-                loadmodel= "",\
+                training_mode= 0, tournement_mode= 100, \
+                modelplay1= "model-type1 et 1 200-JEDI vs JEDI 200 0 0.h5", \
+                modelplay2="model-type2 et 2 450-JEDI vs CODER 2 448 0.h5",\
+                loadmodel= "model-type2 et 2 450-JEDI vs CODER 2 448 0.h5",\
                 num_model= 2, num_model1= 1, num_model2= 2, param= {"tau":1, "epsilon":2})
 
     if game.training_mode(): game.apprentissage()
